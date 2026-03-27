@@ -1,0 +1,16 @@
+{
+    "name": "2.Wave",
+    "rootNamespace": "",
+    "references": [
+        "GUID:016afe29cabf063469f2a301df451875"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

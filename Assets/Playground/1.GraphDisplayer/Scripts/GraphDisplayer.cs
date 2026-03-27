@@ -1,42 +1,37 @@
-using System.Collections.Generic;
+using Playground.Shared;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace Playground._1.GraphDisplayer.Scripts
 {
     public class GraphDisplayer : MonoBehaviour
     {
-        [SerializeField] 
-        private GameObject _pointPrefab;
-        
+        private float GraphLength => _xBoundries.magnitude;
+
         [SerializeField] 
         private Vector2 _xBoundries;
-        [SerializeField, Range(1,1000)] 
+        [SerializeField] 
         private int _resolution;
-        
-        private List<GameObject> _points = new List<GameObject>();
+        [SerializeField]
+        private PointsManager _pointsManager;
 
-        private float GraphLength => _xBoundries.magnitude;
-        private ObjectPool<GameObject> _pool;
-
-        private void OnValidate()
+        private void Awake()
         {
-            if(!Application.isPlaying)
-                return;
-            
-            DrawGraph();
+            _pointsManager.Initialize();
         }
 
-        private void Start()
+        private void Update()
         {
-            DrawGraph();
+            AnimateGraph();
         }
 
-        private void DrawGraph()
+        private void AnimateGraph()
         {
-            _pool ??= CreatePool();
-            
-            ReleasePoints();
+            DrawGraph(Time.fixedTime);
+        }
+
+        private void DrawGraph(float functionOffset)
+        {
+            _pointsManager.ReleasePoints();
             
             var stepSize = GraphLength / _resolution;
             var stepCount = Mathf.CeilToInt(GraphLength / stepSize);
@@ -45,37 +40,11 @@ namespace Playground._1.GraphDisplayer.Scripts
             for (int i = 0; i < stepCount; i++)
             {
                 var xPos = xOffset - i * stepSize;
-                var yPos = Mathf.Sin(xPos);
+                var yPos = Mathf.Sin(xPos + functionOffset);
                 var scale = Vector3.one * stepSize;
                 
-                CreatePoint(new Vector3(xPos, yPos, 0), scale);
+                _pointsManager.CreatePoint(new Vector3(xPos, yPos, 0), scale);
             }
-        }
-        
-        private void ReleasePoints()
-        {
-            foreach (var point in _points)
-            {
-                _pool.Release(point);
-            }
-            
-            _points.Clear();
-        }
-        
-        private void CreatePoint(Vector3 position, Vector3 scale)
-        {
-            var point = _pool.Get();
-            point.transform.position = position;
-            point.transform.localScale = scale;
-            _points.Add(point);
-        }
-
-        private ObjectPool<GameObject> CreatePool()
-        {
-            return new ObjectPool<GameObject>(() => Instantiate(_pointPrefab, transform, true),
-                point => { point.SetActive(true); },
-                point => { point.SetActive(false); },
-                Destroy);
         }
     }
 }
