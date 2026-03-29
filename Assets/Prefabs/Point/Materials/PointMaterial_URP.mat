@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PointMaterial
-  m_Shader: {fileID: 4800000, guid: f477c12ad6f00e444a82c8c28c76468d, type: 3}
+  m_Name: PointMaterial_URP
+  m_Shader: {fileID: -6465566751694194690, guid: 6701b7ba3e5568448b99ba4cae870913, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
