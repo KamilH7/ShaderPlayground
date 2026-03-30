@@ -8,7 +8,7 @@ public class FunctionProvider : MonoBehaviour
     [SerializeField] private FunctionType _functionType;
     [SerializeField] private FunctionParameter[] _parameters;
 
-    public float GetYPosition(float x, float z)
+    public Vector3 GetPosition(float x, float z)
     {
         return FunctionLibrary.GetFunction(_functionType)(x, z, Time.fixedTime * speed, _parameters);
     }

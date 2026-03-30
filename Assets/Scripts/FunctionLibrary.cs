@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class FunctionLibrary
 {
-    public delegate float Function(float xPos, float zPos, float functionOffset, params FunctionParameter[] parameters);
+    public delegate Vector3 Function(float u, float v, float functionOffset, params FunctionParameter[] parameters);
 
     private static readonly Dictionary<FunctionType, Function> _functionsMap = new ()
     {
@@ -31,35 +31,57 @@ public static class FunctionLibrary
         return _functionsMap[type];
     }
         
-    private static float NormalizedSine(float xPos, float zPos, float timeOffset, params FunctionParameter[]  parameters)
+    private static Vector3 NormalizedSine(float xPos, float zPos, float timeOffset, params FunctionParameter[]  parameters)
     {
         return NormalizedSine(xPos, zPos, timeOffset, parameters.GetParameter(ParameterType.Frequency), parameters.GetParameter(ParameterType.Amplitude), parameters.GetParameter(ParameterType.Offset));
     }
         
-    private static float NormalizedSine(float xPos, float zPos, float timeOffset, float frequency, float amplitude, float customOffset)
+    private static Vector3 NormalizedSine(float xPos, float zPos, float timeOffset, float frequency, float amplitude, float customOffset)
     {
-        return Mathf.Sin(frequency * Mathf.PI * (xPos + zPos + timeOffset + customOffset)) * amplitude;
+        Vector3 result = new()
+        {
+            x = xPos,
+            y = Mathf.Sin(frequency * Mathf.PI * (xPos + zPos + timeOffset + customOffset)) * amplitude,
+            z = zPos,
+        };
+
+        return result;
     }
         
-    private static float MultiWave (float xPos, float zPos, float functionOffset, params FunctionParameter[]  parameters) {
-        float y = NormalizedSine(xPos, 0, functionOffset, 1f, 1f, 0.5f);
-        y += NormalizedSine(0, zPos, functionOffset, 2f, 0.5f, 0f);
-        y += NormalizedSine(xPos, zPos, functionOffset, 1f, 1f, 0.25f);
-        return y * 2/3;
+    private static Vector3 MultiWave (float xPos, float zPos, float functionOffset, params FunctionParameter[]  parameters) 
+    {
+        Vector3 result = NormalizedSine(xPos, 0, functionOffset, 1f, 1f, 0.5f);
+        result += NormalizedSine(0, zPos, functionOffset, 2f, 0.5f, 0f);
+        result += NormalizedSine(xPos, zPos, functionOffset, 1f, 1f, 0.25f);
+        result.y *= 2f / 3;
+
+        result.x = xPos;
+        result.z = zPos;
+        
+        return result;
     }
-    private static float MultiWaveSlide (float xPos, float zPos, float functionOffset, params FunctionParameter[] parameters) {
-        float y = NormalizedSine(zPos, 0, functionOffset);
+    
+    private static Vector3 MultiWaveSlide (float xPos, float zPos, float functionOffset, params FunctionParameter[] parameters) 
+    {
+        Vector3 result = NormalizedSine(zPos, 0, functionOffset);
+        
         //multiply the function offset to make it move slower than the wave above
-        y += NormalizedSine(xPos, 0, functionOffset * 0.5f, 2f, 0.5f,0f);
-        return y * 2/3;
+        result += NormalizedSine(xPos, 0, functionOffset * 0.5f, 2f, 0.5f,0f);
+        
+        result.x = xPos;
+        result.z = zPos;
+        result.y *= 2f / 3;
+        return result;
     }
         
-    private static float Ripple(float xPos, float zPos, float functionOffset, params FunctionParameter[] parameters)
+    private static Vector3 Ripple(float xPos, float zPos, float functionOffset, params FunctionParameter[] parameters)
     {
         float distance = Mathf.Sqrt(xPos * xPos + zPos * zPos);
-        float amplitude = 1/(1 + parameters.GetParameter(ParameterType.DampeningForce) * distance);
-        float y = NormalizedSine(distance, 0, -functionOffset, parameters.GetParameter(ParameterType.Frequency), amplitude * parameters.GetParameter(ParameterType.Amplitude), 0f);
-        return y;
+        float amplitude = 1/(1 + parameters.GetParameter(ParameterType.DampeningForce) * distance); 
+        Vector3 result = NormalizedSine(distance, 0, -functionOffset, parameters.GetParameter(ParameterType.Frequency), amplitude * parameters.GetParameter(ParameterType.Amplitude), 0f);
+        result.x = xPos;
+        result.z = zPos;
+        return result;
     }
 
     private static float GetParameter(this FunctionParameter[] parameters, ParameterType type)

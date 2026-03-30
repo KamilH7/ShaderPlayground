@@ -61,9 +61,9 @@ public class GridFunctionDisplayer : MonoBehaviour
                 
                 var xPos = min + (increment * x);
                 var zPos = min + (increment * z);
-                var yPos = _functionProvider.GetYPosition(xPos, zPos);
+                var resultPos = _functionProvider.GetPosition(xPos, zPos);
                     
-                point.transform.localPosition =  new Vector3(xPos, yPos, zPos);
+                point.transform.localPosition =  new Vector3(resultPos.x, resultPos.y, resultPos.z);
                 point.transform.localScale = new Vector3(increment, increment, increment);
             }
         }
