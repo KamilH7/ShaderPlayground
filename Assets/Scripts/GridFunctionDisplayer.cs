@@ -55,11 +55,12 @@ public class GridFunctionDisplayer : MonoBehaviour
 
         for (int x = 0; x < resolution; x++)
         {
+            var xPos = min + (increment * x);
+            
             for (int z = 0; z < resolution; z++)
             {
                 var point = _points[x,z];
                 
-                var xPos = min + (increment * x);
                 var zPos = min + (increment * z);
                 var resultPos = _functionProvider.GetPosition(xPos, zPos);
                     
