@@ -183,13 +183,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.25
-  _functionType: 0
+  _functionType: 8
   _parameters:
   - <Type>k__BackingField: 0
-    <Value>k__BackingField: 10
+    <Value>k__BackingField: 1
   - <Type>k__BackingField: 1
     <Value>k__BackingField: 1
   - <Type>k__BackingField: 2
+    <Value>k__BackingField: 1
+  - <Type>k__BackingField: 3
+    <Value>k__BackingField: 1
+  - <Type>k__BackingField: 4
+    <Value>k__BackingField: 1
+  - <Type>k__BackingField: 5
+    <Value>k__BackingField: 1
+  - <Type>k__BackingField: 6
     <Value>k__BackingField: 1
 --- !u!1 &719957863
 GameObject:
